@@ -4,36 +4,22 @@ const express = require('express')
 const app = express();
 const nunjucks = require('nunjucks');
 const models = require('./models');
-const router = require('./routes/index.js')
+const router = require('./routes/index');
 /////////////////////////////
 
 app.use(express.static('public'));
 
 app.use('/', router);
 
-
 /////////////////////////////
 
-
 models.db.sync({force: true})
-  .then(function () {
+.then(function () {
     app.listen(3000, function () {
-      console.log('Server is listening on port 3001!');
+        console.log('Server is listening on port 3001!');
     });
   })
   .catch(console.error);
-
-router.get('/', function (req, res, next) {
-  res.send('got to GET /wiki/');
-});
-
-router.post('/', function (req, res, next) {
-  res.send('got to POST /wiki/');
-});
-
-router.get('/add', function (req, res, next) {
-  res.send('got to GET /wiki/add');
-});
 
 /////////////////////////////
 

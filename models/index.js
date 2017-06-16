@@ -21,6 +21,19 @@ var Page = db.define('page', {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
   }
+}, {
+  hooks: {
+    beforeValidate: function generateUrlTitle(title) {
+      if (title) {
+        title.setDataValue('urlTitle', title.title.replace(/\s+/g, '_').replace(/\W/g, ''));
+      } else {
+        title.setDataValue('urlTitle', Math.random().toString(36).substring(2, 7));
+      }
+    }
+  },
+  getterMethods : {
+    route: function() {return '/wiki/' + this.urlTitle + ''}
+  }
 });
 
 var User = db.define('user', {
@@ -34,20 +47,6 @@ var User = db.define('user', {
     validate: {
       isEmail: true
     }
-  }
-});
-
-var Route = db.define('route', {
-  url: Sequelize.STRING
-}, {
-  getterMethods : {
-    urlTitle : function(){return Page.urlTitle}
-  },
-
-  setterMethods : {
-    urlTitle : function(value){
-      this.setDataValue('url', '/wiki/' + value)
-    },
   }
 });
 
