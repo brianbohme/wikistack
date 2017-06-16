@@ -9,7 +9,10 @@ var User = models.User;
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 router.get('/', function (req, res, next) {
-  res.redirect('/');
+  Page.findAll().then(function (pages) {
+    res.render('index', {pages : pages});
+  })
+  .catch(next)
 });
 
 router.get('/add', function (req, res, next) {
