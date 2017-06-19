@@ -1,0 +1,10 @@
+{% extends "layout.html" %} {% block content %}
+<h3>{{user.name}}</h3>
+<h4><a href="{{user.email}}"></a>{{user.email}}</h4>
+<ul class="list-unstyled">
+  {% for page in pages %}
+  <li>
+    <a href="/wiki/{{page.urlTitle}}">{{page.title}}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

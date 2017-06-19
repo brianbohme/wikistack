@@ -1,5 +1,7 @@
 var Sequelize = require('sequelize');
-var db = new Sequelize('postgres://localhost:5432/wikistack', {logging: false});
+var db = new Sequelize('postgres://localhost:5432/wikistack', {
+  logging: false
+});
 
 var Page = db.define('page', {
   title: {
@@ -20,6 +22,9 @@ var Page = db.define('page', {
   date: {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
+  },
+  tags: {
+    type: Sequelize.ARRAY(Sequelize.TEXT)
   }
 }, {
   hooks: {
@@ -31,8 +36,35 @@ var Page = db.define('page', {
       }
     }
   },
-  getterMethods : {
-    route: function() {return '/wiki/' + this.urlTitle + ''}
+  getterMethods: {
+    route: function () {
+      return '/wiki/' + this.urlTitle + ''
+    }
+  },
+  classMethods: {
+    findByTag: function (values) {
+      return this.findAll({
+        where: {
+          tags: {
+            $overlap: values
+          }
+        }
+      })
+    }
+  },
+  instanceMethods: {
+    findPagesByTag: function () {
+      return Page.findAll({
+        where: {
+          tags: {
+            $overlap: this.tags
+          },
+          id: {
+            $ne: this.id
+          }
+        }
+      })
+    }
   }
 });
 
@@ -50,8 +82,12 @@ var User = db.define('user', {
   }
 });
 
+Page.belongsTo(User, {
+  as: 'author'
+});
+
 module.exports = {
   db: db,
   Page: Page,
-  User: User
+  User: User,
 };

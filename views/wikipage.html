@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
   <h3>{{page.title}} <small> (<a href="{{page.urlTitle}}/similar">Similar</a>)</small></h3>
-  <h4>by <a href="{{page.name}}">{{page.author.name}}</a></h4>
+  <div>{{page.tags.join(', ')}} </div>
+  <h4>by <a href="/users/{{page.authorId}}">{{page.author.name}}</a></h4>
+  <a href="{{page.author.email}}">{{page.author.email}}</a>
   <div>{{page.status}}</div>
   <hr/>
-  <a href="{{page.name}}">{{page.author.name}}</a>
   <div class="page-body">{{page.content}}</div>
   <hr/>
   <a href="{{page.urlTitle}}/edit" class="btn btn-primary">edit this page</a>
