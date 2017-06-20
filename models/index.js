@@ -53,17 +53,17 @@ var Page = db.define('page', {
     }
   },
   instanceMethods: {
-    findPagesByTag: function () {
+    findSimilar: function () {
       return Page.findAll({
         where: {
-          tags: {
-            $overlap: this.tags
-          },
           id: {
             $ne: this.id
+          },
+          tags: {
+            $overlap: this.tags
           }
         }
-      })
+      });
     }
   }
 });

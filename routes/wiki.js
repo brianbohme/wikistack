@@ -33,12 +33,27 @@ router.get('/search', function (req, res, next) {
 });
 
 router.get('/:urlTitle/similar', function (req, res, next) {
-  Page.build().findPagesByTag().then(function (pages) {
-    res.render('tagSeach', {
-      pages: pages
-    })
+
+  Page.findOne({
+    where: {
+      urlTitle: req.params.urlTitle
+    }
   })
+    .then(function (page) {
+      if (page === null) {
+        throw generateError('No pages correspond to this title', 404);
+      } else {
+        return page.findSimilar()
+          .then(function (pages) {
+            res.render('index', {
+              pages: pages
+            });
+          });
+      }
+    })
+    .catch(next);
 });
+
 
 router.get('/:urlTitle', function (req, res, next) {
 
